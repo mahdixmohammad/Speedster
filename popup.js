@@ -36,19 +36,16 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     let current;
 
     // initializing action badge
-    chrome.action.setBadgeText({ text: speedAmount.toFixed(2).toString() });
+    chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
 
     // initializing popup speed buttons
     for (let i = 0; i < speedElements.length; i++) {
-        speedElements[i].textContent = presetSpeeds[i].toFixed(2).toString();
-        if (speedElements[i].textContent == speedAmount.toFixed(2).toString()) {
+        speedElements[i].textContent = presetSpeeds[i].toFixed(2);
+        if (speedElements[i].textContent == speedAmount.toFixed(2)) {
             speedElements[i].classList.add("active");
             current = speedElements[i];
         }
     }
-
-    // initializing popup input value
-    custom.value = speedAmount.toFixed(2);
 
     // initializing toggle button settings
     if (!keybindsEnabled) {
@@ -68,32 +65,35 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
             element.style.filter = "grayscale(100%) opacity(75%)";
         });
     }
-
+    
     // initializing video playback speed
     adjustSpeed(speedAmount);
     
-    function injectScript(speedAmount) {
-        let videos = document.querySelectorAll("video");
-        if (videos) {
-            videos.forEach(video => {
-                video.playbackRate = speedAmount;
-            })
-        }
-    }
+    // initializing popup input value
+    custom.value = speedAmount.toFixed(2);
 
-    async function adjustSpeed(newSpeed) {
+    // function injectScript(speedAmount) {
+    //     let videos = document.querySelectorAll("video");
+    //     if (videos) {
+    //         videos.forEach(video => {
+    //             video.playbackRate = speedAmount;
+    //         })
+    //     }
+    // }
+
+    function adjustSpeed(newSpeed) {
         speedAmount = Number(newSpeed.toFixed(2));
         if (speedAmount < 0.1 && speedAmount >= 0.01) speedAmount = 0.1;
         custom.value = speedAmount;
         data["key1"] = speedAmount;
         chrome.storage.local.set(data);
 
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            await chrome.scripting.executeScript({
-                args: [speedAmount],
-                target: { tabId: tab.id },
-                func: injectScript,
-            });
+        // const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        //     await chrome.scripting.executeScript({
+        //         args: [speedAmount],
+        //         target: { tabId: tab.id },
+        //         func: injectScript,
+        //     });
     }
 
     speedElements.forEach(speedElement => {

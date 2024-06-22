@@ -12,7 +12,7 @@
         "128": "icons/speedster-icon.png"
     },
         "default_title": "Speedster",
-        "default_popup": "index.html"
+        "default_popup": "popup.html"
     },
     "content_scripts": [
         {

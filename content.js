@@ -19,6 +19,16 @@ function updateVariablesFromStorage() {
         data["key3"] = buttonsEnabled;
         data["key4"] = keybindsEnabled;
         data["key5"] = extensionEnabled;
+
+        try {
+            let videos = document.querySelectorAll("video");
+            videos.forEach(video => {
+                video.playbackRate = speedAmount;
+            });
+        }
+        catch(error) {
+            console.log(error.message);
+        }
     });
 }
 
@@ -32,29 +42,60 @@ chrome.storage.onChanged.addListener((changes) => {
     }
 });
 
-// Constantly refreshes with adjusted speed
-setInterval(() => {
-    if (document.querySelector("video")) {
-        let videos = document.querySelectorAll("video");
-        videos.forEach(video => {
-            video.playbackRate = speedAmount;
-        })
-    }
-}, 500)
-
 document.addEventListener("keydown", (e) => {
     if (keybindsEnabled && extensionEnabled) {
         let selected = Number(e.key);
         if (e.altKey && selected >= 1 && selected <= 9) {
-            speedAmount = presetSpeeds[selected - 1];
-            data["key1"] = speedAmount;
-            chrome.storage.local.set(data);
-            let videos = document.querySelectorAll("video");
-            if (videos) {
-                videos.forEach(video => {
-                    video.playbackRate = speedAmount;
-                })
+            try {
+                speedAmount = presetSpeeds[selected - 1];
+                data["key1"] = speedAmount;
+                chrome.storage.local.set(data);
+                let videos = document.querySelectorAll("video");
+                if (videos) {
+                    videos.forEach(video => {
+                        video.playbackRate = speedAmount;
+                    })
+                }
+            }
+            catch(error) {
+                console.log(error.message);
             }
         }
     }
 });
+
+// Listen for DOM changes and adjust playback speed accordingly
+const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0 && document.querySelector("video")) {
+            // New nodes (e.g., video elements) were added to the DOM
+            try {
+                let videos = document.querySelectorAll("video");
+                videos.forEach(video => {
+                    video.playbackRate = speedAmount;
+                });
+            }
+            catch(error) {
+                console.log(error.message);
+            }
+        }
+    }
+});
+
+// Observe changes in the entire document
+observer.observe(document, { childList: true, subtree: true });
+
+// // Constantly refreshes all tabs with adjusted speed
+// setInterval(() => {
+//     if (document.querySelector("video")) {
+//         try {
+//             let videos = document.querySelectorAll("video");
+//             videos.forEach(video => {
+//                 video.playbackRate = speedAmount;
+//             })
+//         }
+//         catch(error) {
+//             console.log(error.message);
+//         }
+//     }
+// }, 500)

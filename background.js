@@ -31,7 +31,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     data["key4"] = keybindsEnabled;
     data["key5"] = extensionEnabled;
 
-    chrome.action.setBadgeText({ text: speedAmount.toFixed(2).toString() });
+    chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
     chrome.storage.local.set(data);
 
     // Listen for changes in local storage
@@ -39,15 +39,14 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         if (changes.key1 || changes.key2 || changes.key3 || changes.key4 || changes.key5) {
             chrome.storage.local.get('key1', (result) => {
                 speedAmount = result.key1;
-                console.log(speedAmount.toFixed(2).toString());
-                chrome.action.setBadgeText({ text: speedAmount.toFixed(2).toString() });
+                chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
             });
         }
     });
 
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (changeInfo.status === 'complete') {
-            chrome.action.setBadgeText({ text: speedAmount.toFixed(2).toString() });
+            chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
         }
     });
 });
