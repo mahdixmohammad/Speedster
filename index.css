@@ -1,0 +1,224 @@
+html {
+    scroll-behavior: smooth;
+}
+@font-face {
+    font-family: Poppins;
+    src: url(fonts/Poppins.otf);
+}
+* {
+    text-decoration: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Poppins;
+    background: rgb(255, 255, 255);
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 460px;
+    margin: auto;
+    padding-top: 20px;
+    align-items: center;
+    background: linear-gradient(135deg, white, rgb(150, 150, 150), white);
+}
+#top {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+}
+img {
+    width: 45px !important;
+    height: fit-content;
+}
+h1 {
+    font-size: 36px;
+}
+.container {
+    width: 400px;
+    height: 180px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    column-gap: 10px;
+    /* background: red; */
+}
+@property --myColor1 {
+    syntax: '<color>';
+    initial-value: rgb(210, 210, 210);
+    inherits: false;
+  }
+@property --myColor2 {
+    syntax: '<color>';
+    initial-value: rgb(255, 255, 255);
+    inherits: false;
+}
+.speed {
+    width: 100px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--myColor1) 5%, var(--myColor2) 55%, var(--myColor1) 100%);
+    border: 2px solid rgb(140, 140, 140);
+    border-radius: 10px;
+    color: rgb(0, 0, 0);
+    font-size: 1rem;
+    font-weight: 900;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+    transition: --myColor1 0.5s, --myColor2 0.5s, border 0.3s, font-size 0.2s !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.speed:hover {
+    --myColor1: rgb(169, 189, 255);
+    --myColor2: rgb(255, 255, 255);
+    border: 2px solid rgb(125, 156, 255);
+    font-size: 18px;
+}
+.speed.active, .speed.active:hover {
+    --myColor1: rgb(76, 118, 255);
+    --myColor2: rgb(203, 216, 255);
+    border: 2px solid rgb(52, 100, 255);
+}
+.speed.editable {
+    background: white;
+    color: rgb(91, 91, 91);
+    cursor: text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+input {
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    align-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    border: 1px solid transparent;
+    box-shadow: 0 0 5px rgb(53, 53, 53);
+}
+input:hover {
+    border: 1px solid rgb(52, 100, 255);
+    transition: 0.5s;
+}
+input:focus {
+    border: 2px solid rgb(52, 100, 255);
+    box-shadow: 0 0 5px rgb(52, 100, 255);
+    outline: 0;
+}
+/* For Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* For Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+#manual {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 13px;
+}
+.double-left-arrow,
+.double-right-arrow {
+    display: flex;
+}
+.double-left-arrow:hover .left-arrow {
+    border-right: 22px solid rgb(33, 66, 198) !important;
+    transition: 0.4s;
+}
+.double-right-arrow:hover .right-arrow {
+    border-left: 22px solid rgb(33, 66, 198) !important;
+    transition: 0.4s;
+}
+.double-left-arrow * {
+    border-right: 22px solid rgb(18, 36, 117) !important;
+}
+.double-right-arrow * {
+    border-left: 22px solid rgb(18, 36, 117) !important;
+}
+.left-arrow {
+    width: 0; 
+    height: 0; 
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-right: 30px solid rgb(70, 70, 70);
+    cursor: pointer;
+}
+.right-arrow {
+    width: 0; 
+    height: 0; 
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-left: 30px solid rgb(70, 70, 70);
+    cursor: pointer;
+}
+.left-arrow:hover {
+    border-right: 30px solid rgb(33, 66, 198);
+    transition: 0.4s;
+}
+.right-arrow:hover {
+    border-left: 30px solid rgb(33, 66, 198);
+    transition: 0.4s;
+}
+.row {
+    display: flex;
+    gap: 55px;
+    align-items: center;
+    margin: 5px 0;
+}
+.settings {
+    width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.settings p {
+    font-size: 18px;
+}
+.toggle-background {
+    width: 54px;
+    height: 30px;
+    background: #444;
+    border-radius: 30px;
+    transition: 0.2s;
+}
+.toggle-background.active {
+    background: cornflowerblue;
+}
+.toggle-button {
+    position: relative;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.toggle-background.active .toggle-button {
+    left: 27px;
+}
+#edit {
+    width: 35px !important;
+    cursor: pointer;
+}
+#reset {
+    width: 35px !important;
+    cursor: pointer;
+}

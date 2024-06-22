@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="index.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="icons/speedster-icon.png">
+    <link rel="icon" type="image/png" href="icons/speedster-icon.png" />
+    <title>Speedster</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="top">
+            <img src="icons/speedster-icon.png">
+            <h1>Speedster</h1>
+        </div>
+        <div class="container">
+            <div class="speed">0.50</div>
+            <div class="speed">0.75</div>
+            <div class="speed">1.00</div>
+            <div class="speed">1.25</div>
+            <div class="speed">1.50</div>
+            <div class="speed">2.00</div>
+            <div class="speed">3.00</div>
+            <div class="speed">4.00</div>
+            <div class="speed">16.00</div>
+        </div>
+        <div id="manual">
+            <div class="double-left-arrow">
+                <div class="left-arrow"></div>
+                <div class="left-arrow"></div>
+            </div>
+            <div class="left-arrow" id="small-dec"></div>
+            <input type="number" min="0" max="16" step="0.01" value="1.00">
+            <div class="right-arrow" id="small-inc"></div>
+            <div class="double-right-arrow">
+                <div class="right-arrow"></div>
+                <div class="right-arrow"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="settings" id="enable-keybinds">
+                <p>Keybinds:</p>
+                <div class="toggle-background active">
+                    <div class="toggle-button"></div>
+                </div>
+                <p id="keys-state">ON</p>
+            </div>
+            <img id="edit" src="icons/pencil-icon.png" title="Edit">
+        </div>
+        <div class="row exception">
+            <div class="settings" id="enable-extension">
+                <p>Extension:</p>
+                <div class="toggle-background active">
+                    <div class="toggle-button"></div>
+                </div>
+                <p id="extension-state">ON</p>
+            </div> 
+            <img id="reset" src="icons/reset-icon.png" title="Reset">
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
