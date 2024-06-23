@@ -8,14 +8,14 @@
 // let extensionEnabled = true;
 // const data = {};
 
-let speedAmount;
-let presetSpeeds;
-let buttonsEnabled;
-let keybindsEnabled;
-let extensionEnabled;
-const data = {};
-
 chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
+    let speedAmount;
+    let presetSpeeds;
+    let buttonsEnabled;
+    let keybindsEnabled;
+    let extensionEnabled;
+    const data = {};
+
     speedAmount = result.key1;
     presetSpeeds = result.key2;
     buttonsEnabled = result.key3;

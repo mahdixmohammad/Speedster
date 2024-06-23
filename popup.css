@@ -23,7 +23,7 @@ body {
     margin: auto;
     padding: 20px;
     align-items: center;
-    background: linear-gradient(135deg, white, rgb(150, 150, 150), white);
+    background: linear-gradient(135deg, white, rgb(180, 180, 180), white);
 }
 #top {
     width: fit-content;
