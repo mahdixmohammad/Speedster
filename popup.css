@@ -14,15 +14,14 @@ html {
 }
 body {
     font-family: Poppins;
-    background: rgb(255, 255, 255);
 }
 .wrapper {
     display: flex;
     flex-direction: column;
     width: 380px;
-    height: 450px;
+    height: 480px;
     margin: auto;
-    padding-top: 20px;
+    padding: 20px;
     align-items: center;
     background: linear-gradient(135deg, white, rgb(150, 150, 150), white);
 }
@@ -65,7 +64,6 @@ h1 {
     background: linear-gradient(135deg, var(--myColor1) 5%, var(--myColor2) 55%, var(--myColor1) 100%);
     border: 2px solid rgb(140, 140, 140);
     border-radius: 5px;
-    color: rgb(0, 0, 0);
     font-size: 1rem;
     font-weight: 900;
     text-align: center;
@@ -101,11 +99,11 @@ input {
     align-content: center;
     font-weight: 800;
     font-size: 1rem;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     box-shadow: 0 0 5px rgb(53, 53, 53);
 }
 input:hover {
-    border: 1px solid rgb(52, 100, 255);
+    border: 2px solid rgb(52, 100, 255);
     transition: 0.5s;
 }
 input:focus {
@@ -126,7 +124,6 @@ input[type=number] {
 }
 #manual {
     margin-top: 10px;
-    margin-bottom: 30px;
     width: 400px;
     display: flex;
     justify-content: center;
@@ -144,11 +141,11 @@ input[type=number] {
     border-left: 22px solid rgb(0, 69, 198) !important;
 }
 .double-left-arrow:hover .left-arrow {
-    border-right: 22px solid rgb(0, 80, 229) !important;
+    border-right: 22px solid rgb(0, 83, 238) !important;
     transition: 0.3s;
 }
 .double-right-arrow:hover .right-arrow {
-    border-left: 22px solid rgb(0, 80, 229) !important;
+    border-left: 22px solid rgb(0, 83, 238) !important;
     transition: 0.3s;
 }
 .left-arrow {
@@ -175,6 +172,20 @@ input[type=number] {
     border-left: 30px solid rgb(70, 70, 70);
     transition: 0.3s;
 }
+.help-row {
+    display: flex;
+    width: 310px;
+    height: 55px;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    font-size: 18px;
+    border-bottom: 1px solid black;
+}
+.help-row img {
+    width: 37px !important;
+    margin-right: -3px;
+}
 .row {
     display: flex;
     gap: 55px;
@@ -195,6 +206,7 @@ input[type=number] {
     height: 30px;
     background: #444;
     border-radius: 30px;
+    cursor: pointer;
     transition: 0.2s;
 }
 .toggle-background.active {
@@ -208,17 +220,28 @@ input[type=number] {
     height: 24px;
     background: white;
     border-radius: 50px;
-    cursor: pointer;
     transition: 0.3s;
 }
 .toggle-background.active .toggle-button {
     left: 27px;
 }
-#edit {
+@keyframes rotating {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(-7deg); }
+}
+#edit, #reset {
     width: 35px !important;
     cursor: pointer;
 }
-#reset {
-    width: 35px !important;
-    cursor: pointer;
+#edit {
+    animation-name: rotating;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+#edit:hover, #reset:hover {
+    animation: none;
+    transform: scale(1.1);
+    transition: 0.3s;
 }
