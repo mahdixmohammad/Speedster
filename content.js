@@ -7,7 +7,7 @@ const data = {};
 
 // Function to update variables from storage
 function updateVariablesFromStorage() {
-    chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (items) => {
+    chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (items) => {
         speedAmount = items.key1;
         presetSpeeds = items.key2;
         buttonsEnabled = items.key3;
@@ -49,7 +49,7 @@ document.addEventListener("keydown", (e) => {
             try {
                 speedAmount = presetSpeeds[selected - 1];
                 data["key1"] = speedAmount;
-                chrome.storage.local.set(data);
+                chrome.storage.sync.set(data);
                 let videos = document.querySelectorAll("video");
                 if (videos) {
                     videos.forEach(video => {

@@ -8,7 +8,7 @@
 // let extensionEnabled = true;
 // const data = {};
 
-chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
+chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     let speedAmount;
     let presetSpeeds;
     let buttonsEnabled;
@@ -86,7 +86,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         if (speedAmount < 0.1 && speedAmount >= 0.01) speedAmount = 0.1;
         custom.value = speedAmount;
         data["key1"] = speedAmount;
-        chrome.storage.local.set(data);
+        chrome.storage.sync.set(data);
 
         // const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         //     await chrome.scripting.executeScript({
@@ -189,13 +189,13 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
             document.querySelector("#keys-state").textContent = "ON";
             keybindsEnabled = true;
             data["key4"] = keybindsEnabled;
-            chrome.storage.local.set(data);
+            chrome.storage.sync.set(data);
         }
         else {
             document.querySelector("#keys-state").textContent = "OFF";
             keybindsEnabled = false;
             data["key4"] = keybindsEnabled;
-            chrome.storage.local.set(data);
+            chrome.storage.sync.set(data);
         }
     })
 
@@ -206,7 +206,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
             document.querySelector("#extension-state").textContent = "ON";
             extensionEnabled = true;
             data["key5"] = extensionEnabled;
-            chrome.storage.local.set(data);
+            chrome.storage.sync.set(data);
             // css enable extension
             elements.forEach((element) => {
                 element.style.pointerEvents = "auto";
@@ -220,7 +220,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
             if (current) current.classList.remove("active");
             extensionEnabled = false;
             data["key5"] = extensionEnabled;
-            chrome.storage.local.set(data);
+            chrome.storage.sync.set(data);
             // css disable extension
             elements.forEach((element) => {
                 element.style.pointerEvents = "none";
@@ -247,7 +247,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
             }
             i += 1;
             data["key2"] = presetSpeeds;
-            chrome.storage.local.set(data);
+            chrome.storage.sync.set(data);
         })
 
     })
@@ -290,7 +290,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         adjustSpeed(1);
         presetSpeeds = [0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 3.00, 4.00, 16.00];
         data["key2"] = presetSpeeds;
-        chrome.storage.local.set(data);
+        chrome.storage.sync.set(data);
         custom.value = parseFloat(custom.value).toFixed(2);
         if (current) current.classList.remove("active");
         current = document.querySelector(".speed:nth-child(3)");

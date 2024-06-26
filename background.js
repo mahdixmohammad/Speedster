@@ -1,5 +1,5 @@
-// Retrieve stored variables from local storage
-chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
+// Retrieve stored variables from storage
+chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     let speedAmount;
     let presetSpeeds;
     let buttonsEnabled;
@@ -24,7 +24,7 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         extensionEnabled = true;
     }
 
-    // Store variables in local storage (if not already present)
+    // Store variables in storage (if not already present)
     data["key1"] = speedAmount;
     data["key2"] = presetSpeeds;
     data["key3"] = buttonsEnabled;
@@ -32,12 +32,12 @@ chrome.storage.local.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     data["key5"] = extensionEnabled;
 
     chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
-    chrome.storage.local.set(data);
+    chrome.storage.sync.set(data);
 
-    // Listen for changes in local storage
+    // Listen for changes in storage
     chrome.storage.onChanged.addListener((changes) => {
         if (changes.key1 || changes.key2 || changes.key3 || changes.key4 || changes.key5) {
-            chrome.storage.local.get('key1', (result) => {
+            chrome.storage.sync.get('key1', (result) => {
                 speedAmount = result.key1;
                 chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
             });

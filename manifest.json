@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Speedster",
     "author": "Mahdi Mohammad",
-    "description": "Speedster is a browser extension for Google Chrome and Microsoft Edge that allows users to adjust the playback speed of videos across all tabs. With a simple and intuitive interface, Speedster provides customizable speed settings. Whether you want to skip ads, optimize entertainment pacing, or breeze through lectures, Speedster has you covered!",
+    "description": "Adjusts the playback speed of videos across all tabs through customizable presets.",
     "version": "1.0",
     "action": {
         "default_icon": {
@@ -16,6 +16,7 @@
     },
     "content_scripts": [
         {
+        "all_frames": true,
         "matches": ["<all_urls>"],
         "js": ["content.js"]
         }
