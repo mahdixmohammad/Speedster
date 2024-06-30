@@ -1,3 +1,5 @@
+"use strict";
+
 // Retrieve stored variables from storage
 chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     let speedAmount;
@@ -10,15 +12,15 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     // Check if the entire object exists in storage
     if (result) {
         // Initialize variables from storage or use default values
-        speedAmount = result.key1 !== undefined ? result.key1 : 1.00;
-        presetSpeeds = result.key2 !== undefined ? result.key2 : [0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 3.00, 4.00, 16.00];
+        speedAmount = result.key1 !== undefined ? result.key1 : 1;
+        presetSpeeds = result.key2 !== undefined ? result.key2 : [0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4, 16];
         buttonsEnabled = result.key3 !== undefined ? result.key3 : true;
         keybindsEnabled = result.key4 !== undefined ? result.key4 : true;
         extensionEnabled = result.key5 !== undefined ? result.key5 : true;
     } else {
         // Initialize with default values
-        speedAmount = 1.00;
-        presetSpeeds = [0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 3.00, 4.00, 16.00];
+        speedAmount = 1;
+        presetSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4, 16];
         buttonsEnabled = true;
         keybindsEnabled = true;
         extensionEnabled = true;
@@ -50,4 +52,3 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         }
     });
 });
-

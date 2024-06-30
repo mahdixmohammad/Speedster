@@ -1,3 +1,5 @@
+"use strict";
+
 let speedAmount;
 let presetSpeeds;
 let buttonsEnabled;
@@ -84,18 +86,3 @@ const observer = new MutationObserver((mutationsList) => {
 
 // Observe changes in the entire document
 observer.observe(document, { childList: true, subtree: true });
-
-// // Constantly refreshes all tabs with adjusted speed
-// setInterval(() => {
-//     if (document.querySelector("video")) {
-//         try {
-//             let videos = document.querySelectorAll("video");
-//             videos.forEach(video => {
-//                 video.playbackRate = speedAmount;
-//             })
-//         }
-//         catch(error) {
-//             console.log(error.message);
-//         }
-//     }
-// }, 500)

@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 // default values:
 // let speedAmount = 1.00;
@@ -34,18 +34,13 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     const toggleExtension = document.querySelector("#enable-extension .toggle-background");
     const elements = document.querySelectorAll(".wrapper :not(.exception, .exception *), #reset");
     let current;
+    let currentlyTyping = false;
 
     // initializing action badge
     chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
 
     // initializing popup speed buttons
-    for (let i = 0; i < speedElements.length; i++) {
-        speedElements[i].textContent = presetSpeeds[i].toFixed(2);
-        if (speedElements[i].textContent == speedAmount.toFixed(2)) {
-            speedElements[i].classList.add("active");
-            current = speedElements[i];
-        }
-    }
+    setSpeedButtons()
 
     // initializing toggle button settings
     if (!keybindsEnabled) {
@@ -56,7 +51,6 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         toggleExtension.classList.remove("active");
         document.querySelector("#extension-state").textContent = "OFF";
         adjustSpeed(1);
-        custom.value = parseFloat(custom.value).toFixed(2);
         if (current) current.classList.remove("active");
 
         // css disable extension
@@ -72,42 +66,18 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     // initializing popup input value
     custom.value = speedAmount.toFixed(2);
 
-    // function injectScript(speedAmount) {
-    //     let videos = document.querySelectorAll("video");
-    //     if (videos) {
-    //         videos.forEach(video => {
-    //             video.playbackRate = speedAmount;
-    //         })
-    //     }
-    // }
-
-    function adjustSpeed(newSpeed) {
-        speedAmount = Number(newSpeed.toFixed(2));
-        if (speedAmount < 0.1 && speedAmount >= 0.01) speedAmount = 0.1;
-        custom.value = speedAmount;
-        data["key1"] = speedAmount;
-        chrome.storage.sync.set(data);
-
-        // const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        //     await chrome.scripting.executeScript({
-        //         args: [speedAmount],
-        //         target: { tabId: tab.id },
-        //         func: injectScript,
-        //     });
-    }
-
     speedElements.forEach(speedElement => {
         speedElement.addEventListener("click", () => {
             if (buttonsEnabled) {
                 if (current) current.classList.remove("active");
                 current = speedElement;
                 current.classList.add("active");
-                adjustSpeed(Number(speedElement.textContent));
-                custom.value = parseFloat(custom.value).toFixed(2);
+                adjustSpeed(speedElement.textContent);
             }
         });
     });
 
+    // ensures that typing does not switch to preset speed
     custom.addEventListener("focusin", () => {
         keybindsEnabled = false;
     })
@@ -116,7 +86,9 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         keybindsEnabled = true;
     })
 
+    // user types in custom input
     custom.addEventListener("keyup", () => {
+        currentlyTyping = true;
         if (current) current.classList.remove("active");
         if (custom.value && custom.value != speedAmount) {
             if (Number(custom.value < 0)) adjustSpeed(0);
@@ -125,11 +97,12 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         }
     })
 
+    // user submits custom input
     custom.addEventListener("change", () => {
-        custom.value = parseFloat(custom.value).toFixed(2);
+        currentlyTyping = false;
+        adjustSpeed(custom.value);
         if (!custom.value) {
-            adjustSpeed(0.00);
-            custom.value = parseFloat(0.00).toFixed(2);
+            adjustSpeed(0);
         }
     })
 
@@ -138,8 +111,7 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     leftArrow.addEventListener("click", () => {
         if (current) current.classList.remove("active");
         if (speedAmount > 0.1) adjustSpeed(speedAmount - 0.1);
-        else if (speedAmount === 0.1) adjustSpeed(0.00)
-        custom.value = parseFloat(custom.value).toFixed(2);
+        else if (speedAmount === 0.1) adjustSpeed(0)
     })
 
     // right arrow key custom increase
@@ -147,7 +119,6 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     rightArrow.addEventListener("click", () => {
         if (current) current.classList.remove("active");
         if (speedAmount <= 15.9) adjustSpeed(speedAmount + 0.1);
-        custom.value = parseFloat(custom.value).toFixed(2);
     })
 
     // double left arrow key custom decrease
@@ -155,8 +126,7 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     doubleLeftArrow.addEventListener("click", () => {
         if (current) current.classList.remove("active");
         if (speedAmount > 1) adjustSpeed(speedAmount - 1);
-        else if (speedAmount === 1) adjustSpeed(0.00)
-        custom.value = parseFloat(custom.value).toFixed(2);
+        else if (speedAmount === 1) adjustSpeed(0)
     })
 
     // double right arrow key custom increase
@@ -164,7 +134,6 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     doubleRightArrow.addEventListener("click", () => {
         if (current) current.classList.remove("active");
         if (speedAmount <= 15) adjustSpeed(speedAmount + 1);
-        custom.value = parseFloat(custom.value).toFixed(2);
     })
 
     // key bindings to select speed
@@ -176,8 +145,7 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
                 if (current) current.classList.remove("active");
                 current = speedElement;
                 current.classList.add("active");
-                adjustSpeed(Number(speedElement.textContent));
-                custom.value = parseFloat(custom.value).toFixed(2);
+                adjustSpeed(speedElement.textContent);
             }
         }
     });
@@ -216,7 +184,6 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         else {
             document.querySelector("#extension-state").textContent = "OFF";
             adjustSpeed(1);
-            custom.value = parseFloat(custom.value).toFixed(2);
             if (current) current.classList.remove("active");
             extensionEnabled = false;
             data["key5"] = extensionEnabled;
@@ -279,7 +246,7 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
         });
 
         speedElement.addEventListener("focusout", () => {
-            speedElement.textContent = parseFloat(Number(speedElement.textContent)).toFixed(2)
+            speedElement.textContent = parseFloat(speedElement.textContent).toFixed(2)
             if (Number(speedElement.textContent) > 16) speedElement.textContent = "16.00";
             if (Number(speedElement.textContent) < 0) speedElement.textContent = "0.00";
         })
@@ -288,22 +255,11 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
     // reset button
     document.querySelector("#reset").addEventListener("click", () => {
         adjustSpeed(1);
-        presetSpeeds = [0.50, 0.75, 1.00, 1.25, 1.50, 2.00, 3.00, 4.00, 16.00];
+        presetSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4, 16];
         data["key2"] = presetSpeeds;
         chrome.storage.sync.set(data);
-        custom.value = parseFloat(custom.value).toFixed(2);
         if (current) current.classList.remove("active");
-        current = document.querySelector(".speed:nth-child(3)");
-        current.classList.add("active");
-        document.querySelector(".speed:nth-child(1)").textContent = "0.50";
-        document.querySelector(".speed:nth-child(2)").textContent = "0.75";
-        document.querySelector(".speed:nth-child(3)").textContent = "1.00";
-        document.querySelector(".speed:nth-child(4)").textContent = "1.25";
-        document.querySelector(".speed:nth-child(5)").textContent = "1.50";
-        document.querySelector(".speed:nth-child(6)").textContent = "2.00";
-        document.querySelector(".speed:nth-child(7)").textContent = "3.00";
-        document.querySelector(".speed:nth-child(8)").textContent = "4.00";
-        document.querySelector(".speed:nth-child(9)").textContent = "16.00";
+        setSpeedButtons();
 
         speedElements.forEach(speedElement => {
             if (speedElement.classList.contains("editable")) {
@@ -314,4 +270,22 @@ chrome.storage.sync.get(['key1', 'key2', 'key3', 'key4', 'key5'], (result) => {
             }
         })
     })
+
+    function adjustSpeed(newSpeed) {
+        speedAmount = Number(newSpeed);
+        if (speedAmount < 0.1 && speedAmount >= 0.01) speedAmount = 0.1;
+        if (!currentlyTyping) custom.value = speedAmount.toFixed(2);
+        data["key1"] = speedAmount;
+        chrome.storage.sync.set(data);
+    }
+
+    function setSpeedButtons() {
+        for (let i = 0; i < speedElements.length; i++) {
+            speedElements[i].textContent = presetSpeeds[i].toFixed(2);
+            if (speedElements[i].textContent == speedAmount.toFixed(2)) {
+                speedElements[i].classList.add("active");
+                current = speedElements[i];
+            }
+        }
+    }
 })
