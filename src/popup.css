@@ -3,7 +3,7 @@ html {
 }
 @font-face {
     font-family: Poppins;
-    src: url(fonts/Poppins.otf);
+    src: url(assets/fonts/Poppins.otf);
 }
 * {
     text-decoration: none;
