@@ -5,12 +5,13 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
 	mode: "production",
 	entry: {
-		popup: "./src/popup.js",
-		content: "./src/content.js",
-		background: "./src/background.js",
+		popup: "./src/popup.ts",
+		content: "./src/content.ts",
+		background: "./src/background.ts",
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
+			filename: "popup.html",
 			template: "./src/popup.html",
 		}),
 		new MiniCssExtractPlugin({

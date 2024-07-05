@@ -1,0 +1,29 @@
+{
+	"manifest_version": 3,
+	"name": "Speedster",
+	"author": "Mahdi Mohammad",
+	"description": "Adjusts the playback speed of videos across all tabs through customizable presets.",
+	"version": "1.0",
+	"action": {
+		"default_icon": {
+			"16": "icons/speedster-icon.png",
+			"24": "icons/speedster-icon.png",
+			"32": "icons/speedster-icon.png",
+			"128": "icons/speedster-icon.png"
+		},
+		"default_title": "Speedster",
+		"default_popup": "popup.html"
+	},
+	"content_scripts": [
+		{
+			"all_frames": true,
+			"matches": ["<all_urls>"],
+			"js": ["content.js"]
+		}
+	],
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
+	},
+	"permissions": ["tabs", "activeTab", "scripting", "storage"]
+}

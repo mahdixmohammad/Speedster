@@ -10,14 +10,23 @@ require("./popup.css");
 // let extensionEnabled = true;
 // const data = {};
 
-chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
-	let speedAmount;
-	let presetSpeeds;
-	let buttonsEnabled;
-	let keybindsEnabled;
-	let extensionEnabled;
-	const data = {};
+let speedAmount: number;
+let presetSpeeds: number[];
+let buttonsEnabled: boolean;
+let keybindsEnabled: boolean;
+let extensionEnabled: boolean;
 
+interface DataObject {
+	key1?: number;
+	key2?: number[];
+	key3?: boolean;
+	key4?: boolean;
+	key5?: boolean;
+}
+
+const data: DataObject = {};
+
+chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	speedAmount = result.key1;
 	presetSpeeds = result.key2;
 	buttonsEnabled = result.key3;
@@ -30,19 +39,20 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	data["key4"] = keybindsEnabled;
 	data["key5"] = extensionEnabled;
 
-	const speedElements = document.querySelectorAll(".speed");
-	const custom = document.querySelector("input");
-	const toggleKeybinds = document.querySelector(
+	const speedElements: NodeListOf<HTMLElement> =
+		document.querySelectorAll(".speed")!;
+	const custom: HTMLInputElement = document.querySelector("input")!;
+	const toggleKeybinds: HTMLElement = document.querySelector(
 		"#enable-keybinds .toggle-background"
-	);
-	const toggleExtension = document.querySelector(
+	)!;
+	const toggleExtension: HTMLElement = document.querySelector(
 		"#enable-extension .toggle-background"
-	);
-	const elements = document.querySelectorAll(
+	)!;
+	const elements: NodeListOf<HTMLElement> = document.querySelectorAll(
 		".wrapper :not(.exception, .exception *), #reset"
 	);
-	let current;
-	let currentlyTyping = false;
+	let current: HTMLElement;
+	let currentlyTyping: boolean = false;
 
 	// initializing action badge
 	chrome.action.setBadgeText({ text: speedAmount.toFixed(2) });
@@ -53,16 +63,16 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	// initializing toggle button settings
 	if (!keybindsEnabled) {
 		toggleKeybinds.classList.remove("active");
-		document.querySelector("#keys-state").textContent = "OFF";
+		document.querySelector("#keys-state")!.textContent = "OFF";
 	}
 	if (!extensionEnabled) {
 		toggleExtension.classList.remove("active");
-		document.querySelector("#extension-state").textContent = "OFF";
+		document.querySelector("#extension-state")!.textContent = "OFF";
 		adjustSpeed(1);
-		if (current) current.classList.remove("active");
+		if (current!) current.classList.remove("active");
 
 		// css disable extension
-		elements.forEach(element => {
+		elements.forEach((element: HTMLElement): void => {
 			element.style.pointerEvents = "none";
 			element.style.filter = "grayscale(100%) opacity(75%)";
 		});
@@ -74,39 +84,39 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	// initializing popup input value
 	custom.value = speedAmount.toFixed(2);
 
-	speedElements.forEach(speedElement => {
-		speedElement.addEventListener("click", () => {
+	speedElements.forEach((speedElement: HTMLElement) => {
+		speedElement.addEventListener("click", (): void => {
 			if (buttonsEnabled) {
 				if (current) current.classList.remove("active");
 				current = speedElement;
 				current.classList.add("active");
-				adjustSpeed(speedElement.textContent);
+				adjustSpeed(speedElement.textContent!);
 			}
 		});
 	});
 
 	// ensures that typing does not switch to preset speed
-	custom.addEventListener("focusin", () => {
+	custom.addEventListener("focusin", (): void => {
 		keybindsEnabled = false;
 	});
 
-	custom.addEventListener("focusout", () => {
+	custom.addEventListener("focusout", (): void => {
 		keybindsEnabled = true;
 	});
 
 	// user types in custom input
-	custom.addEventListener("keyup", () => {
+	custom.addEventListener("keyup", (): void => {
 		currentlyTyping = true;
 		if (current) current.classList.remove("active");
-		if (custom.value && custom.value != speedAmount) {
-			if (Number(custom.value < 0)) adjustSpeed(0);
-			else if (Number(custom.value > 16)) adjustSpeed(16);
+		if (custom.value && custom.value != speedAmount.toString()) {
+			if (Number(custom.value) < 0) adjustSpeed(0);
+			else if (Number(custom.value) > 16) adjustSpeed(16);
 			else adjustSpeed(Number(custom.value));
 		}
 	});
 
 	// user submits custom input
-	custom.addEventListener("change", () => {
+	custom.addEventListener("change", (): void => {
 		currentlyTyping = false;
 		adjustSpeed(custom.value);
 		if (!custom.value) {
@@ -115,22 +125,23 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	});
 
 	// left arrow key custom decrease
-	const leftArrow = document.querySelector("#small-dec");
-	leftArrow.addEventListener("click", () => {
+	const leftArrow: HTMLElement = document.querySelector("#small-dec")!;
+	leftArrow.addEventListener("click", (): void => {
 		if (current) current.classList.remove("active");
 		if (speedAmount > 0.1) adjustSpeed(speedAmount - 0.1);
 		else if (speedAmount === 0.1) adjustSpeed(0);
 	});
 
 	// right arrow key custom increase
-	const rightArrow = document.querySelector("#small-inc");
-	rightArrow.addEventListener("click", () => {
+	const rightArrow: HTMLElement = document.querySelector("#small-inc")!;
+	rightArrow.addEventListener("click", (): void => {
 		if (current) current.classList.remove("active");
 		if (speedAmount <= 15.9) adjustSpeed(speedAmount + 0.1);
 	});
 
 	// double left arrow key custom decrease
-	const doubleLeftArrow = document.querySelector(".double-left-arrow");
+	const doubleLeftArrow: HTMLElement =
+		document.querySelector(".double-left-arrow")!;
 	doubleLeftArrow.addEventListener("click", () => {
 		if (current) current.classList.remove("active");
 		if (speedAmount > 1) adjustSpeed(speedAmount - 1);
@@ -138,38 +149,40 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	});
 
 	// double right arrow key custom increase
-	const doubleRightArrow = document.querySelector(".double-right-arrow");
+	const doubleRightArrow: HTMLElement = document.querySelector(
+		".double-right-arrow"
+	)!;
 	doubleRightArrow.addEventListener("click", () => {
 		if (current) current.classList.remove("active");
 		if (speedAmount <= 15) adjustSpeed(speedAmount + 1);
 	});
 
 	// key bindings to select speed
-	document.addEventListener("keydown", e => {
+	document.addEventListener("keydown", (e: KeyboardEvent): void => {
 		if (keybindsEnabled && extensionEnabled) {
-			let selected = Number(e.key);
+			let selected: number = Number(e.key);
 			if (selected <= 9 && selected >= 1) {
-				let speedElement = document.querySelector(
+				let speedElement: HTMLElement = document.querySelector(
 					`.speed:nth-child(${selected})`
-				);
+				)!;
 				if (current) current.classList.remove("active");
 				current = speedElement;
 				current.classList.add("active");
-				adjustSpeed(speedElement.textContent);
+				adjustSpeed(speedElement.textContent!);
 			}
 		}
 	});
 
 	// toggle keybinds button
-	toggleKeybinds.addEventListener("click", () => {
+	toggleKeybinds.addEventListener("click", (): void => {
 		toggleKeybinds.classList.toggle("active");
 		if (toggleKeybinds.classList.contains("active")) {
-			document.querySelector("#keys-state").textContent = "ON";
+			document.querySelector("#keys-state")!.textContent = "ON";
 			keybindsEnabled = true;
 			data["key4"] = keybindsEnabled;
 			chrome.storage.sync.set(data);
 		} else {
-			document.querySelector("#keys-state").textContent = "OFF";
+			document.querySelector("#keys-state")!.textContent = "OFF";
 			keybindsEnabled = false;
 			data["key4"] = keybindsEnabled;
 			chrome.storage.sync.set(data);
@@ -177,20 +190,21 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	});
 
 	// toggle extension button
-	toggleExtension.addEventListener("click", () => {
+	toggleExtension.addEventListener("click", (): void => {
 		toggleExtension.classList.toggle("active");
 		if (toggleExtension.classList.contains("active")) {
-			document.querySelector("#extension-state").textContent = "ON";
+			document.querySelector("#extension-state")!.textContent = "ON";
 			extensionEnabled = true;
 			data["key5"] = extensionEnabled;
 			chrome.storage.sync.set(data);
+
 			// css enable extension
-			elements.forEach(element => {
+			elements.forEach((element: HTMLElement): void => {
 				element.style.pointerEvents = "auto";
 				element.style.filter = "none";
 			});
 		} else {
-			document.querySelector("#extension-state").textContent = "OFF";
+			document.querySelector("#extension-state")!.textContent = "OFF";
 			adjustSpeed(1);
 			if (current) current.classList.remove("active");
 			extensionEnabled = false;
@@ -205,9 +219,9 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	});
 
 	// edit button
-	document.querySelector("#edit").addEventListener("click", () => {
+	document.querySelector("#edit")!.addEventListener("click", (): void => {
 		let i = 0;
-		speedElements.forEach(speedElement => {
+		speedElements.forEach((speedElement: HTMLElement): void => {
 			speedElement.classList.remove("active");
 			speedElement.classList.toggle("editable");
 			speedElement.toggleAttribute("contenteditable");
@@ -226,7 +240,7 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 		});
 	});
 
-	speedElements.forEach(speedElement => {
+	speedElements.forEach((speedElement: HTMLElement): void => {
 		const invalidKeys = [
 			"Enter",
 			" ",
@@ -249,22 +263,22 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 			"ArrowRight",
 		];
 
-		speedElement.addEventListener("keydown", function (e) {
+		speedElement.addEventListener("keydown", (e: KeyboardEvent): void => {
 			// only one decimal is allowed
-			if (speedElement.textContent.includes(".")) {
+			if (speedElement.textContent!.includes(".")) {
 				invalidKeys.push(".");
-				const index = validKeys.indexOf(".");
+				const index: number = validKeys.indexOf(".");
 				if (index > -1) validKeys.splice(index, 1);
 			}
 			// no decimal in text means decimal is a valid key
 			else {
 				validKeys.push(".");
-				const index = invalidKeys.indexOf(".");
+				const index: number = invalidKeys.indexOf(".");
 				if (index > -1) invalidKeys.splice(index, 1);
 			}
 			// user can only type numbers or press valid keys
 			if (
-				(isNaN(String.fromCharCode(e.which)) ||
+				(isNaN(Number(String.fromCharCode(e.which))) ||
 					invalidKeys.includes(e.key)) &&
 				!validKeys.includes(e.key)
 			) {
@@ -274,7 +288,7 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 
 		speedElement.addEventListener("focusout", () => {
 			speedElement.textContent = parseFloat(
-				speedElement.textContent
+				speedElement.textContent!
 			).toFixed(2);
 			if (Number(speedElement.textContent) > 16)
 				speedElement.textContent = "16.00";
@@ -284,7 +298,7 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 	});
 
 	// reset button
-	document.querySelector("#reset").addEventListener("click", () => {
+	document.querySelector("#reset")!.addEventListener("click", (): void => {
 		adjustSpeed(1);
 		presetSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4, 16];
 		data["key2"] = presetSpeeds;
@@ -292,7 +306,7 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 		if (current) current.classList.remove("active");
 		setSpeedButtons();
 
-		speedElements.forEach(speedElement => {
+		speedElements.forEach((speedElement: HTMLElement): void => {
 			if (speedElement.classList.contains("editable")) {
 				if (toggleKeybinds.classList.contains("active"))
 					keybindsEnabled = true;
@@ -303,7 +317,7 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 		});
 	});
 
-	function adjustSpeed(newSpeed) {
+	function adjustSpeed(newSpeed: string | number) {
 		speedAmount = Number(newSpeed);
 		if (speedAmount < 0.1 && speedAmount >= 0.01) speedAmount = 0.1;
 		if (!currentlyTyping) custom.value = speedAmount.toFixed(2);
