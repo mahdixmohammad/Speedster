@@ -27,17 +27,11 @@ interface DataObject {
 const data: DataObject = {};
 
 chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
-	speedAmount = result.key1;
-	presetSpeeds = result.key2;
-	buttonsEnabled = result.key3;
-	keybindsEnabled = result.key4;
-	extensionEnabled = result.key5;
-
-	data["key1"] = speedAmount;
-	data["key2"] = presetSpeeds;
-	data["key3"] = buttonsEnabled;
-	data["key4"] = keybindsEnabled;
-	data["key5"] = extensionEnabled;
+	data["key1"] = speedAmount = result.key1;
+	data["key2"] = presetSpeeds = result.key2;
+	data["key3"] = buttonsEnabled = result.key3;
+	data["key4"] = keybindsEnabled = result.key4;
+	data["key5"] = extensionEnabled = result.key5;
 
 	const speedElements: NodeListOf<HTMLElement> =
 		document.querySelectorAll(".speed")!;
@@ -173,48 +167,42 @@ chrome.storage.sync.get(["key1", "key2", "key3", "key4", "key5"], result => {
 		}
 	});
 
+	const toggleButtonMap: Map<boolean, string> = new Map([
+		[true, "ON"],
+		[false, "OFF"],
+	]);
+
 	// toggle keybinds button
 	toggleKeybinds.addEventListener("click", (): void => {
 		toggleKeybinds.classList.toggle("active");
-		if (toggleKeybinds.classList.contains("active")) {
-			document.querySelector("#keys-state")!.textContent = "ON";
-			keybindsEnabled = true;
-			data["key4"] = keybindsEnabled;
-			chrome.storage.sync.set(data);
-		} else {
-			document.querySelector("#keys-state")!.textContent = "OFF";
-			keybindsEnabled = false;
-			data["key4"] = keybindsEnabled;
-			chrome.storage.sync.set(data);
-		}
+		keybindsEnabled = !keybindsEnabled;
+		const keysState: HTMLElement = document.querySelector("#keys-state")!;
+		keysState.textContent = toggleButtonMap.get(keybindsEnabled)!;
+		data["key4"] = keybindsEnabled;
+		chrome.storage.sync.set(data);
 	});
 
 	// toggle extension button
 	toggleExtension.addEventListener("click", (): void => {
 		toggleExtension.classList.toggle("active");
-		if (toggleExtension.classList.contains("active")) {
-			document.querySelector("#extension-state")!.textContent = "ON";
-			extensionEnabled = true;
-			data["key5"] = extensionEnabled;
-			chrome.storage.sync.set(data);
+		extensionEnabled = !extensionEnabled;
+		const extensionState: HTMLElement =
+			document.querySelector("#extension-state")!;
+		extensionState.textContent = toggleButtonMap.get(keybindsEnabled)!;
+		data["key5"] = extensionEnabled;
+		chrome.storage.sync.set(data);
 
-			// css enable extension
-			elements.forEach((element: HTMLElement): void => {
-				element.style.pointerEvents = "auto";
-				element.style.filter = "none";
-			});
-		} else {
-			document.querySelector("#extension-state")!.textContent = "OFF";
+		// css enable / disable extension
+		elements.forEach((element: HTMLElement): void => {
+			element.style.pointerEvents = extensionEnabled ? "auto" : "none";
+			element.style.filter = extensionEnabled
+				? "none"
+				: "grayscale(100%) opacity(75%)";
+		});
+
+		if (!extensionEnabled) {
 			adjustSpeed(1);
 			if (current) current.classList.remove("active");
-			extensionEnabled = false;
-			data["key5"] = extensionEnabled;
-			chrome.storage.sync.set(data);
-			// css disable extension
-			elements.forEach(element => {
-				element.style.pointerEvents = "none";
-				element.style.filter = "grayscale(100%) opacity(75%)";
-			});
 		}
 	});
 
